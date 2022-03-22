@@ -66,15 +66,25 @@ class StoryList {
     return new StoryList(stories);
   }
 
-  /** Adds story data to API, makes a Story instance, adds it to story list.
-   * - user - the current instance of User who will post the story
-   * - obj of {title, author, url}
-   *
-   * Returns the new Story instance
-   */
-
-  async addStory( /* user, newStory */) {
+  /*
+  * Adds story data to API, makes a Story instance, adds it to story list.
+  * - user - the current instance of User who will post the story
+  * - obj of {title, author, url}
+  *
+  * Returns the new Story instance
+  */
+  async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
+    const storyData = {
+      token: user.loginToken,
+      story: {
+        author: newStory.author,
+        title: newStory.title, 
+        url: newStory.url
+      }
+    };
+    const response = await axios.post('https://hack-or-snooze-v3.herokuapp.com/stories', storyData);
+    return new Story(response.data);
   }
 }
 
