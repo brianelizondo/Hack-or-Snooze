@@ -50,3 +50,34 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+
+/* Function called when users submit the form to Add New Story */
+function isValidUrl(url) {   
+  var regExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  return regExp.test(url);
+}
+async function submitNewStoryData() {
+  // grab the title, author and url
+  const title = $("#add-story-title").val();
+  const author = $("#add-story-author").val();
+  const url = $("#add-story-url").val();
+
+  // check if the URl is correct
+  if(isValidUrl(url)){
+    // StoryList.addStory adds a new story by sending the right data to API and returns an instance of Story
+    const storyData = {
+      title, 
+      author, 
+      url
+    }
+    // let respNewStory = await newStory.addStory(currentUser, storyData);
+    let respNewStory = await storyList.addStory(currentUser, {title, author, url});
+    
+    $addStoryForm.trigger("reset");
+    $("#add-story-form").hide();
+    start();
+  }else{
+    alert('The URL is not valid. Please try again');
+  }
+}

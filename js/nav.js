@@ -11,7 +11,6 @@ function navAllStories(evt) {
   hidePageComponents();
   putStoriesOnPage();
 }
-
 $body.on("click", "#nav-all", navAllStories);
 
 /** Show login/signup on click on "login" */
@@ -22,7 +21,6 @@ function navLoginClick(evt) {
   $loginForm.show();
   $signupForm.show();
 }
-
 $navLogin.on("click", navLoginClick);
 
 /** When a user first logins in, update the navbar to reflect that. */
@@ -30,7 +28,21 @@ $navLogin.on("click", navLoginClick);
 function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
+  $navSubmit.show();
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+/** Show New Story Form/Add New Story on click on "submit" */
+function navSubmitClick() {
+  console.debug("navSubmitClick");
+  $("#add-story-author").val(`${currentUser.name}`);
+  $("#add-story-form").show();
+  $('form#add-story-form button').on('click', function(evt){
+    console.debug("add story", evt);
+    evt.preventDefault();
+    submitNewStoryData();
+  });
+}
+$navSubmit.on("click", navSubmitClick);

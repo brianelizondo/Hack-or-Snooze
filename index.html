@@ -1,29 +1,20 @@
 <!DOCTYPE html>
-
 <!-- Hack or Snooze
+    This is the only HTML page; the applications manipulates this DOM during use.
 
-     This is the only HTML page; the applications manipulates this DOM
-     during use.
-
-     Primary authors:
-     - Michael Hueter: initial creation, 2018
-     - Elie Schoppik: refactoring using OO, 2019
-     - Joel Burton: refactored and componentized, 2020
-     - You!
-  -->
-
+    Primary authors:
+      - Michael Hueter: initial creation, 2018
+      - Elie Schoppik: refactoring using OO, 2019
+      - Joel Burton: refactored and componentized, 2020
+      - Brian Elizondo: completed functions and features, 2022
+-->
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Hack or Snooze</title>
-  <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-      crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/user.css">
   <link rel="stylesheet" href="css/stories.css">
@@ -37,12 +28,35 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="nav-left">
+    <a class="nav-link hidden" href="#" id="nav-submit">submit</a>
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
 </nav>
+
+<!-- New Story Form/Add New Story forms -->
+<section class="stories-container container">
+  <form action="#" id="add-story-form" class="account-form hidden" method="post">
+    <h4>Add New Story</h4>
+    <div class="add-story-input">
+      <label for="add-story-title">Title</label>
+      <input id="add-story-title" type="text">
+    </div>
+    <div class="add-story-input">
+      <label for="add-story-author">Author</label>
+      <input id="add-story-author" type="text">
+    </div>
+    <div class="add-story-input">
+      <label for="add-story-url">URL</label>
+      <input id="add-story-url" type="url" placeholder="http://www.example.com">
+    </div>
+    <button type="submit">submit</button>
+  </form>
+</section>
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
@@ -74,11 +88,7 @@
   </form>
 
   <!-- Signup form -->
-  <form
-      action="#"
-      id="signup-form"
-      class="account-form hidden"
-      method="post">
+  <form action="#" id="signup-form" class="account-form hidden" method="post">
     <h4>Create Account</h4>
     <div class="login-input">
       <label for="signup-name">name</label>
