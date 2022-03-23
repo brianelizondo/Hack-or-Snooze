@@ -12,6 +12,19 @@ async function getAndShowStoriesOnStart() {
   putStoriesOnPage();
 }
 
+/** 
+ * Allow logged in users to see a separate list of favorited stories 
+ **/
+function getAndShowFavoritedStoriesOnStart(user) {
+  const userFavArr = user.favorites;
+  // turn plain old story objects from API into instances of Story class
+  const stories = userFavArr.map(story => new Story(story));
+  // build an instance of our own class using the new array of stories
+  storyList = new StoryList(stories);
+  $storiesLoadingMsg.remove();
+  putStoriesOnPage();
+}
+
 /**
  * A render method to render HTML for an individual Story instance
  * - story: an instance of Story
@@ -20,11 +33,18 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
+  console.debug("generateStoryMarkup", story);
 
+  const userFavArr = currentUser.favorites;
+  const userFavFind = userFavArr.some(value => value.storyId == story.storyId);
+  const storyFavStatusClass = !userFavFind ? "far" : "fas";
+  
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        <span class="star">
+          <i class="fa-star ${storyFavStatusClass}"></i>
+        </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -47,6 +67,22 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
+
+  // add event listener for click star to marking/unmarking a story as a favorite
+  $('span.star').on('click', async function(evt){
+    const storyID = evt.currentTarget.parentElement.getAttribute('id');
+    currentUser = await User.favoriteStories(currentUser, storyID);
+
+    // show start mark/unmark
+    let iStarContainer = evt.currentTarget.children[0];
+    if(iStarContainer.classList.contains('far')){
+      iStarContainer.classList.remove('far');
+      iStarContainer.classList.add('fas');
+    }else{
+      iStarContainer.classList.remove('fas');
+      iStarContainer.classList.add('far');
+    }
+  });
 
   $allStoriesList.show();
 }

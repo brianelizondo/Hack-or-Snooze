@@ -18,6 +18,9 @@
 
 
 /* Individual stories */
+.star:hover{
+  cursor: pointer;
+}
 
 .story-link {
   color: black;

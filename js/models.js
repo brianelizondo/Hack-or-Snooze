@@ -83,7 +83,11 @@ class StoryList {
         url: newStory.url
       }
     };
-    const response = await axios.post('https://hack-or-snooze-v3.herokuapp.com/stories', storyData);
+    const response = await axios({
+      url: `${BASE_URL}/stories`,
+      method: "POST",
+      data: storyData,
+    });
     return new Story(response.data);
   }
 }
@@ -202,5 +206,32 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  /* Methods for marking/unmarking a story as a favorite from a user  */
+  static async favoriteStories(user, storyID) {
+    // check the storyID for marking/unmarking
+    const userFavArr = currentUser.favorites;
+    const userFavFind = userFavArr.some(value => value.storyId == storyID);
+    const token = user.loginToken;
+    const userFavActionMethod = !userFavFind ? "POST" : "DELETE";
+
+    let response = await axios({
+      url: `${BASE_URL}/users/${user.username}/favorites/${storyID}`,
+      method: userFavActionMethod,
+      data: { token }
+    });
+
+    // return a new user instanse
+    return new User(
+      {
+        username: response.data.user.username,
+        name: response.data.user.name,
+        createdAt: response.data.user.createdAt,
+        favorites: response.data.user.favorites,
+        ownStories: response.data.user.stories
+      },
+      token
+    );
   }
 }

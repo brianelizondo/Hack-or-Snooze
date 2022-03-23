@@ -29,6 +29,7 @@ function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
   $navSubmit.show();
+  $navFavorites.show();
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
@@ -46,3 +47,9 @@ function navSubmitClick() {
   });
 }
 $navSubmit.on("click", navSubmitClick);
+
+/** Show New Story Form/Add New Story on click on "submit" */
+function navFavoriteStories() {
+  getAndShowFavoritedStoriesOnStart(currentUser);
+}
+$navFavorites.on("click", navFavoriteStories);
