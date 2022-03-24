@@ -90,6 +90,22 @@ class StoryList {
     });
     return new Story(response.data);
   }
+
+  /*
+  * Delete story data from  API and delete from story list.
+  *
+  * Returns the Story instance deleted
+  */
+  async delStory(user, storyID) {
+    const token = user.loginToken;
+    const response = await axios({
+      url: `${BASE_URL}/stories/${storyID}`,
+      method: "DELETE",
+      data: { token }
+    });
+
+    return response;
+  }
 }
 
 

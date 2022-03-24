@@ -33,7 +33,7 @@ function getAndShowFavoritedStoriesOnStart(user) {
  */
 
 function generateStoryMarkup(story) {
-  console.debug("generateStoryMarkup", story);
+  // console.debug("generateStoryMarkup", story);
 
   const userFavArr = currentUser.favorites;
   const userFavFind = userFavArr.some(value => value.storyId == story.storyId);
@@ -42,6 +42,9 @@ function generateStoryMarkup(story) {
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        <span class="trash_icon">
+          <img src="trash_icon.png" alt="">
+        </span>  
         <span class="star">
           <i class="fa-star ${storyFavStatusClass}"></i>
         </span>
@@ -84,6 +87,13 @@ function putStoriesOnPage() {
     }
   });
 
+  // add event listener for click trash icon and delete a story
+  $('span.trash_icon img').on('click', async function(evt){
+    const storyID = evt.currentTarget.parentElement.parentElement.getAttribute('id');
+    const response = await storyList.delStory(currentUser, storyID);
+    getAndShowStoriesOnStart();
+  });
+
   $allStoriesList.show();
 }
 
@@ -107,8 +117,7 @@ async function submitNewStoryData() {
       author, 
       url
     }
-    // let respNewStory = await newStory.addStory(currentUser, storyData);
-    let respNewStory = await storyList.addStory(currentUser, {title, author, url});
+    let respNewStory = await storyList.addStory(currentUser, storyData);
     
     $addStoryForm.trigger("reset");
     $("#add-story-form").hide();

@@ -40,3 +40,13 @@
 .story-user {
   display: block;
 }
+
+.trash_icon{
+  padding-right: 3px;
+}
+.trash_icon img{
+  max-height: 12px;
+}
+.trash_icon img:hover{
+  cursor: pointer;
+}
