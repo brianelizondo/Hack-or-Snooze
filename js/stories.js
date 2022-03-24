@@ -3,8 +3,9 @@
 // This is the global list of the stories, an instance of StoryList
 let storyList;
 
-/** Get and show stories when site first loads. */
-
+/*
+* Get and show stories when site first loads. 
+*/
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
@@ -12,9 +13,9 @@ async function getAndShowStoriesOnStart() {
   putStoriesOnPage();
 }
 
-/** 
- * Allow logged in users to see a separate list of favorited stories 
- **/
+/*
+* Allow logged in users to see a separate list of favorited stories 
+*/
 function getAndShowFavoritedStoriesOnStart(user) {
   const userFavArr = user.favorites;
   // turn plain old story objects from API into instances of Story class
@@ -25,26 +26,47 @@ function getAndShowFavoritedStoriesOnStart(user) {
   putStoriesOnPage();
 }
 
-/**
- * A render method to render HTML for an individual Story instance
- * - story: an instance of Story
- *
- * Returns the markup for the story.
- */
+/* 
+* Allow logged in users to see a separate list of own stories 
+*/
+function getAndShowOwnStoriesOnStart(user) {
+  const userOwnArr = user.ownStories;
+  // turn plain old story objects from API into instances of Story class
+  const stories = userOwnArr.map(story => new Story(story));
+  // build an instance of our own class using the new array of stories
+  storyList = new StoryList(stories);
+  $storiesLoadingMsg.remove();
+  putStoriesOnPage();
+}
 
+/*
+* A render method to render HTML for an individual Story instance
+* - story: an instance of Story
+*
+* Returns the markup for the story.
+*/
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const userFavArr = currentUser.favorites;
   const userFavFind = userFavArr.some(value => value.storyId == story.storyId);
   const storyFavStatusClass = !userFavFind ? "far" : "fas";
+
+  // check if a own story
+  let onwStoryHTML = '';
+  const onwStory = currentUser.username == story.username ? true : false;
+  if(onwStory){
+    onwStoryHTML = `
+    <span class="trash_icon">
+      <img src="trash_icon.png" alt="">
+    </span> 
+    `;
+  }
   
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
-        <span class="trash_icon">
-          <img src="trash_icon.png" alt="">
-        </span>  
+        ${onwStoryHTML}
         <span class="star">
           <i class="fa-star ${storyFavStatusClass}"></i>
         </span>
@@ -58,11 +80,11 @@ function generateStoryMarkup(story) {
     `);
 }
 
-/** Gets list of stories from server, generates their HTML, and puts on page. */
-
+/*
+* Gets list of stories from server, generates their HTML, and puts on page. 
+*/
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
@@ -98,7 +120,9 @@ function putStoriesOnPage() {
 }
 
 
-/* Function called when users submit the form to Add New Story */
+/* 
+* Function called when users submit the form to Add New Story 
+*/
 function isValidUrl(url) {   
   var regExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
   return regExp.test(url);
